@@ -1,6 +1,12 @@
 ---
 name: brainstorming-enhanced
 description: Enhanced brainstorming with ADR and mulch integration
+version: 0.1.0
+telemetry:
+  expected_cadence: on_demand
+  expected_participants: all
+  health_signals:
+    - "should precede any significant implementation work"
 ---
 
 # Enhanced Brainstorming with Feedback Loop

@@ -1,6 +1,12 @@
 ---
 name: writing-plans-enhanced
 description: Enhanced plan writing with ADR and mulch integration
+version: 0.1.0
+telemetry:
+  expected_cadence: on_demand
+  expected_participants: all
+  health_signals:
+    - "should follow brainstorming before implementation"
 ---
 
 # Enhanced Writing Plans with Accumulated Expertise

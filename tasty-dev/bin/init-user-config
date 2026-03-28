@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+# bin/init-user-config
+"""Initialize user-level ~/.tasty-dev config and telemetry directory."""
+import os
+import sys
+from pathlib import Path
+
+
+def get_user_dir() -> Path:
+    """Get user-level tasty-dev directory, respecting env override for testing."""
+    override = os.environ.get("TASTYDEV_USER_DIR")
+    if override:
+        return Path(override)
+    return Path.home() / ".tasty-dev"
+
+
+def init_user_config() -> None:
+    """Create user-level config and telemetry directory."""
+    user_dir = get_user_dir()
+    user_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create telemetry directory
+    telemetry_dir = user_dir / "telemetry"
+    telemetry_dir.mkdir(exist_ok=True)
+
+    # Create config only if it doesn't exist
+    config_path = user_dir / "config.toml"
+    if not config_path.exists():
+        config_path.write_text('[telemetry]\nenabled = false\n')
+        print(f"Created {config_path}")
+    else:
+        print(f"Config already exists: {config_path}")
+
+
+if __name__ == "__main__":
+    init_user_config()

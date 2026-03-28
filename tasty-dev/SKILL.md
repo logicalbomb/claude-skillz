@@ -45,6 +45,18 @@ Create or review architecture decision records through guided conversation.
 - `/adr-author --review` — Review all unread ADRs
 - `/adr-author --review <file>` — Review a specific ADR
 
+### `health-assessment`
+Analyze telemetry traces to assess tasty-dev system health (development-time only).
+
+**Trigger**: Use when validating skill effectiveness across projects and users, or when reviewing collected telemetry.
+
+**Skill**: `health-assessment/skill`
+
+**Modes**:
+- `/health-assessment` — Assess all projects
+- `/health-assessment --project <slug>` — Assess one project
+- `/health-assessment --path <dir>` — Assess from an unzipped telemetry folder
+
 ### `review-project`
 Run a weekly project review to assess progress and blockers.
 

@@ -1,6 +1,13 @@
 ---
 name: project-weekly-review
 description: Run weekly project review process
+version: 0.1.0
+telemetry:
+  expected_cadence: weekly
+  expected_participants: at_least_one
+  health_signals:
+    - "should run every 7-10 days per project"
+    - "gap > 14 days is unhealthy"
 ---
 
 # Project Weekly Review
@@ -89,3 +96,18 @@ If knowledge repo configured:
 - Day 10+: More prominent reminder at session start
 
 **Never blocks work**, but keeps reviews from slipping indefinitely.
+
+## Telemetry
+
+After completing this workflow (whether successful, abandoned, or errored):
+
+1. Check if `~/.tasty-dev/config.toml` exists and has `telemetry.enabled = true`
+2. If disabled or missing, skip silently
+3. If enabled, collect trace data:
+   - Skill name, version
+   - Project git remote and user identity
+   - Steps completed (process queue, handle strategic, handle tactical, git trends, finalize drafts, sync)
+   - Counts: reflexions processed, ADRs created/updated, mulch entries added
+   - Issues or steps skipped
+4. Write trace by piping JSON to `bin/write-telemetry-trace`
+5. Do not let telemetry errors interrupt the user's workflow

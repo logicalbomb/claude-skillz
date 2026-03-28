@@ -1,6 +1,13 @@
 ---
 name: adr-author
 description: Guide creation and review of architecture decision records through conversational workflow
+version: 0.1.0
+telemetry:
+  expected_cadence: on_demand
+  expected_participants: all
+  health_signals:
+    - "at least 1 invocation per project per month"
+    - "review mode should run within 7 days of a new proposed ADR"
 ---
 
 # ADR Author Skill
@@ -1272,3 +1279,30 @@ How would you like to review?
 
 [... review workflow continues ...]
 ```
+
+## Telemetry
+
+After completing this workflow (whether successful, abandoned, or errored):
+
+1. Check if `~/.tasty-dev/config.toml` exists and has `telemetry.enabled = true`
+2. If disabled or missing, skip silently
+3. If enabled, collect the following trace data:
+   - Skill name, version, and mode (create/review/review-specific)
+   - Project git remote and user identity
+   - Step-level completion status for each workflow step executed
+   - Outcome summary (ADRs created/reviewed, comments added, status changes)
+   - Any issues (skipped steps, parse errors, user abandonment)
+4. Write trace by piping JSON to `bin/write-telemetry-trace`:
+
+```bash
+echo '{"skill": "adr-author", "skill_version": "0.1.0", ...}' | bin/write-telemetry-trace
+```
+
+5. Do not let telemetry errors interrupt the user's workflow — if writing fails, continue silently
+
+**What to capture in steps:**
+- [completed] / [skipped] / [abandoned] status for each major step
+- For creation mode: Steps 1-9, noting which were skipped or revised
+- For review mode: queue building, each ADR reviewed, comments, approvals
+- Critical analysis results (strength/contribution/consistency pass/fail)
+- User actions at decision points (posted as-is, revised, cancelled)
