@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+# bin/init-project-storage
+"""Initialize .tasty-dev storage structure in a project"""
+import sys
+from pathlib import Path
+import yaml
+
+def init_project_storage(project_path: Path) -> None:
+    """Create .tasty-dev directory structure"""
+    tasty_dev_dir = project_path / ".tasty-dev"
+    tasty_dev_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create subdirectories
+    (tasty_dev_dir / "adr").mkdir(exist_ok=True)
+    (tasty_dev_dir / "mulch").mkdir(exist_ok=True)
+    (tasty_dev_dir / "queue").mkdir(exist_ok=True)
+
+    # Create config only if it doesn't exist
+    config_path = tasty_dev_dir / "config.yaml"
+    if not config_path.exists():
+        config = {
+            "knowledge_repo": None,
+            "last_project_review": None,
+            "last_knowledge_review": None,
+        }
+        with open(config_path, "w") as f:
+            yaml.dump(config, f, default_flow_style=False)
+        print(f"Initialized .tasty-dev in {project_path}")
+    else:
+        print(f"✓ .tasty-dev already initialized in {project_path}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: init-project-storage <project-path>")
+        sys.exit(1)
+
+    project_path = Path(sys.argv[1])
+    init_project_storage(project_path)

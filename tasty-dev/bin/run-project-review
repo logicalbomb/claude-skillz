@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+# bin/run-project-review
+"""Run weekly project review"""
+import sys
+from pathlib import Path
+from datetime import datetime
+import json
+import yaml
+
+def process_queue(project_path: Path) -> list:
+    """Process reflexion queue"""
+    queue_dir = project_path / ".tasty-dev" / "queue"
+    pending_items = []
+
+    for queue_file in queue_dir.glob("*.json"):
+        with open(queue_file) as f:
+            reflexion = json.load(f)
+
+        if reflexion.get("status") == "pending":
+            pending_items.append({
+                "file": queue_file,
+                "data": reflexion
+            })
+
+    return pending_items
+
+def update_last_review(project_path: Path) -> None:
+    """Update last review timestamp"""
+    config_path = project_path / ".tasty-dev" / "config.yaml"
+
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    config["last_project_review"] = datetime.now().isoformat()
+
+    with open(config_path, "w") as f:
+        yaml.dump(config, f, default_flow_style=False)
+
+def run_project_review(project_path: Path) -> None:
+    """Run weekly project review"""
+    print("=" * 60)
+    print("PROJECT WEEKLY REVIEW")
+    print("=" * 60)
+
+    # Process queue
+    print("\n1. Processing reflexion queue...")
+    pending = process_queue(project_path)
+    print(f"   Found {len(pending)} pending reflexions")
+
+    if pending:
+        print("\n   Items to review:")
+        for item in pending:
+            data = item["data"]
+            print(f"   - {data.get('context', 'Unknown')}")
+            print(f"     Classification: {data['classification']['level']}")
+            print(f"     Resolution: {data.get('resolution', 'Unknown')[:60]}...")
+
+    # Update timestamp
+    update_last_review(project_path)
+    print(f"\n✓ Review complete. Processed {len(pending)} items.")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: run-project-review <project-path>")
+        sys.exit(1)
+
+    project_path = Path(sys.argv[1])
+    run_project_review(project_path)
