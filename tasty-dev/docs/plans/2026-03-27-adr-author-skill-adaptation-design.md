@@ -165,11 +165,45 @@ Development-time only — test materials stay in this repo but don't ship with t
 - Validate creation workflow on a real ADR in a real project
 - **Exit:** Skill works end-to-end, creation and review both functional
 
+### Phase 1.5: Telemetry Infrastructure
+
+- User-level init (`~/.tasty-dev/config.toml` with telemetry toggle)
+- Trace writer utility (`bin/write-telemetry-trace`)
+- Version and telemetry expectations added to all skill frontmatters
+- Telemetry instructions appended to all skills
+- Health assessment skill for analyzing collected traces
+- **Exit:** End-to-end smoke test passes (init → enable → write trace → read trace)
+- **Design doc:** `docs/plans/2026-03-28-skill-telemetry-design.md`
+
 ### Phase 2: Single Project Production
 
-- Daily use on one real project
-- Iterate on: generic examples quality, skeptical review without domain context, review queue accuracy, context-aware suggestions as ADRs accumulate
-- **Exit:** 5+ ADRs created, 2+ reviewed/discussed with a teammate
+Validate the full tasty-dev system on an in-flight project. Not just adr-author — the entire feedback loop across all skills. The project will have existing history and decisions, so the loop won't follow a prescribed order.
+
+**Two feedback cycles required.** A cycle is complete when an insight captured by the system has influenced a later decision or piece of work.
+
+**Capabilities exercised (Cycle 1, solo):**
+
+- [ ] Reflexion captured (at least 1 strategic, 1 tactical)
+- [ ] ADR created via `/adr-author` (from any trigger — fresh decision, retroactive documentation, or queued reflexion)
+- [ ] Mulch entry created from tactical insight
+- [ ] Weekly review run and processes at least 1 queued item
+- [ ] Brainstorming or planning session that references existing ADR or mulch
+- [ ] Telemetry traces exist for each skill invoked
+
+**Capabilities exercised (Cycle 2, with teammate):**
+
+- [ ] Teammate reviews and comments on an ADR
+- [ ] ADR approved through approval workflow
+- [ ] Teammate generates at least 1 reflexion trace
+- [ ] Telemetry traces show both users
+
+**System-level validation:**
+
+- [ ] Health assessment produces a meaningful report
+- [ ] Every skill in the suite has at least 1 invocation trace
+- [ ] At least 1 insight from the system demonstrably influenced later work (the loop closed)
+
+**Iterate on:** generic examples quality, skeptical review without domain context, review queue accuracy, context-aware suggestions as ADRs accumulate, reflexion trigger sensitivity, mulch accumulation rate
 
 ### Phase 2.5: Enforcement Foundation
 
